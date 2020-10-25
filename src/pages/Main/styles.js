@@ -71,8 +71,26 @@ export const SubmitButton = styled.button.attrs((props) => ({
 			animation: ${rotate} 2s linear infinite;
 		}
 	}
-`
+`;
 
 export const List = styled.ul`
+	list-style: none;
+	padding-top: 30px;
 
-`
+	li {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		padding: 15px 0;
+
+		& + li {
+			border-top: 1px solid #eee;
+		}
+
+		a{
+			text-decoration: none;
+			color: #7159c7;
+		}
+	}
+`;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Container, Form, SubmitButton, List } from './styles';
@@ -11,6 +12,22 @@ class Main extends Component {
 		repositories: [],
 		loading: false,
 	};
+
+	componentDidMount() {
+		const repositories = localStorage.getItem('repositories');
+
+		if(repositories){
+			this.setState({repositories: JSON.parse(repositories)})
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		const { repositories } = this.state;
+
+		if (prevState.repositories !== repositories) {
+			localStorage.setItem('repositories', JSON.stringify(repositories));
+		}
+	}
 
 	handleImputChange(event) {
 		this.setState({ newRep: event.target.value });
@@ -50,19 +67,21 @@ class Main extends Component {
 						value={newRep}
 					/>
 
-					<SubmitButton loading={loading}>
+					<SubmitButton loading={loading ? 1 : 0}>
 						{loading ? <FaSpinner /> : <FaPlus />}
 					</SubmitButton>
 				</Form>
 
-				<List>{repositories.map((rep, index) => {
-          return (
-            <li key={index}>
-              <span>{rep.name}</span>
-              <a href=''>Detalhes</a>
-            </li>
-          )
-        })}</List>
+				<List>
+					{repositories.map((rep, index) => {
+						return (
+							<li key={index}>
+								<span>{rep.name}</span>
+								<Link to={`/repository/${encodeURIComponent(rep.name)}`}>Details</Link>
+							</li>
+						);
+					})}
+				</List>
 			</Container>
 		);
 	}
