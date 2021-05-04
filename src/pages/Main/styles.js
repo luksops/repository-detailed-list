@@ -1,7 +1,5 @@
 import styled, { keyframes } from 'styled-components';
 
-
-
 export const Form = styled.form`
 	margin-top: 30px;
 	display: flex;
@@ -64,15 +62,50 @@ export const List = styled.ul`
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		padding: 15px 0;
+		height: 100%;
+		padding: 0 10px;
+		transition: 0.45s ease-out;
+
+		&:hover {
+			background-color: #6662;
+			transition: 0.15s ease-in;
+		}
+
+		svg {
+			fill: #b77;
+			cursor: pointer;
+			height: 22px;
+			width: 22px;
+			margin-left: 10px;
+		}
 
 		& + li {
 			border-top: 1px solid #eee;
 		}
 
-		a{
+		a {
 			text-decoration: none;
-			color: #7159c7;
+			color: #666;
+			display: flex;
+			width: 100%;
+			padding: 15px 0;
+
+			&:hover {
+				cursor: pointer;
+				color: #7159c7;
+				transition: 0.3s;
+			}
+
+			p {
+				flex-grow: 1;
+				justify-content: space-between;
+				font-weight: bold;
+			}
 		}
+	}
+
+	span {
+		display: flex;
+		align-items: center;
 	}
 `;

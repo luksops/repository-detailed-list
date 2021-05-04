@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
-import Container from '../../components/Container'
+import Container from '../../components/Container';
 import { Form, SubmitButton, List } from './styles';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
+import { ReactComponent as RemoveIcon } from '../../images/bin_icon.svg';
 
 import api from '../../services/api';
 
@@ -17,8 +20,8 @@ class Main extends Component {
 	componentDidMount() {
 		const repositories = localStorage.getItem('repositories');
 
-		if(repositories){
-			this.setState({repositories: JSON.parse(repositories)})
+		if (repositories) {
+			this.setState({ repositories: JSON.parse(repositories) });
 		}
 	}
 
@@ -39,16 +42,38 @@ class Main extends Component {
 		event.preventDefault();
 		this.setState({ loading: true });
 
-		const response = await api.get(`/repos/${newRep}`);
-		const data = {
-			name: response.data.full_name,
-		};
+		try {
+			const response = await api.get(`/repos/${newRep}`);
 
-		this.setState({
-			loading: false,
-			newRep: '',
-			repositories: [...repositories, data],
-		});
+			const data = {
+				name: response.data.full_name,
+			};
+
+			this.setState({
+				loading: false,
+				newRep: '',
+				repositories: [...repositories, data],
+			});
+		} catch (error) {
+			console.log(error.response);
+			// axios found an error and got a response
+			if (error.response) {
+				Toastify({
+					text: 'Error fetching the repository',
+					backgroundColor: '#5F1100',
+
+					duration: 3000,
+				}).showToast();
+				this.setState({ loading: false });
+				return;
+			}
+		}
+	}
+
+	removeFromList(rep) {
+		const { repositories } = this.state;
+		const newStateList = repositories.filter((repo) => repo.name !== rep.name);
+		this.setState({ ...this.state, repositories: newStateList });
 	}
 
 	render() {
@@ -77,8 +102,11 @@ class Main extends Component {
 					{repositories.map((rep, index) => {
 						return (
 							<li key={index}>
-								<span>{rep.name}</span>
-								<Link to={`/repository/${encodeURIComponent(rep.name)}`}>Details</Link>
+								<Link to={`/repository/${encodeURIComponent(rep.name)}`}>
+									<p>{rep.name}</p>
+									<span>details</span>
+								</Link>
+								<RemoveIcon onClick={() => this.removeFromList(rep)} />
 							</li>
 						);
 					})}
