@@ -88,7 +88,7 @@ class Main extends Component {
 				<Form onSubmit={this.handleSubmit.bind(this)}>
 					<input
 						type='text'
-						placeholder='Add Repository'
+						placeholder='Add a github repository. Ex: facebook/react'
 						onChange={this.handleImputChange.bind(this)}
 						value={newRep}
 					/>
